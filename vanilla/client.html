@@ -1,0 +1,31 @@
+<body> 
+    <div id="open" style="display: none">
+        <label>Text size</label>
+        <button onclick="small()">Small</button>
+        <button onclick="medium()">Medium</button>
+        <button onclick="large()">Large</button>
+    </div>
+    <p id="paragraph">Content will be shown here...</p>
+</body>
+<script>
+
+    let ws = new WebSocket('ws://localhost:7002');
+
+    ws.onopen = (event) => {
+        document.getElementById('open').style.display = 'block'
+    }
+
+    ws.onmessage = (event) => {
+        document.getElementById('paragraph').textContent = event.data
+    }
+    function small(){
+        ws.send('SMALL');
+    }
+    function medium(){
+        ws.send('MEDIUM');
+    }
+    function large(){
+        ws.send('LARGE');
+    }
+
+</script>
