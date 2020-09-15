@@ -1,36 +1,30 @@
-// L� uma linha do teclado
-// Envia o pacote (linha digitada) ao servidor
-
-import java.io.*; // classes para input e output streams e
-import java.net.*;// DatagramaSocket,InetAddress,DatagramaPacket
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 class Client {
-   public static void main(String args[]) throws Exception
-   {
-      // cria o stream do teclado
-      BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args) throws Exception {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-      // declara socket cliente
-      DatagramSocket clientSocket = new DatagramSocket();
+        File path = new File(bufferedReader.readLine());
 
-      // obtem endere�o IP do servidor com o DNS
-      InetAddress IPAddress = InetAddress.getByName("localhost");
+        BufferedReader inFromUser = new BufferedReader(new FileReader(path));
 
-      byte[] sendData = new byte[1024];
-      byte[] receiveData = new byte[1024];
+        DatagramSocket clientSocket = new DatagramSocket();
 
-      // l� uma linha do teclado
-      String sentence = inFromUser.readLine();
-      sendData = sentence.getBytes();
+        InetAddress IPAddress = InetAddress.getByName("localhost");
+        String sentence = inFromUser.readLine();
+        byte[] sendData = sentence.getBytes();
 
-      // cria pacote com o dado, o endere�o do server e porta do servidor
-      DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
-      System.out.println("Message sent to port: 9876");
+        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
+        System.out.println("Message sent to port: 9876 with length: " + sendData.length);
 
-      //envia o pacote
-      clientSocket.send(sendPacket);
+        clientSocket.send(sendPacket);
 
-      // fecha o cliente
-      clientSocket.close();
-   }
+        clientSocket.close();
+    }
 }
